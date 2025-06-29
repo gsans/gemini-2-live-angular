@@ -19,7 +19,7 @@
     "@angular/platform-browser-dynamic": "^19.2.3",
     "@angular/router": "^19.2.3",
     "@deepgram/sdk": "^3.11.2",
-    "@google/genai": "^0.12.0",
+    "@google/genai": "^1.1.0",
     "@ngrx/effects": "^19.0.1",
     "@ngrx/store": "^19.0.1",
     "@ngrx/store-devtools": "^19.0.1",
@@ -41,6 +41,6 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.7.2"
+    "typescript": "^5.8.3"
   }
 }
