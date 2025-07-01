@@ -27,7 +27,7 @@ export class TranscribeService implements OnDestroy {
   private ngUnsubscribe = new Subject<void>();
 
   private _deepgram;
-  private isDeepgramAvailable = () => environment.DEEPGRAM_API_KEY.length>0;
+  private isDeepgramAvailable = () => false; //environment.DEEPGRAM_API_KEY.length>0;
   private socket: ListenLiveClient | undefined = undefined;
   private interval: any;
 
@@ -87,10 +87,10 @@ export class TranscribeService implements OnDestroy {
       this.socket = this._deepgram?.listen.live({
         model: 'nova-3',
         language: 'en-US',
-        encoding: 'linear16',
-        sample_rate: this.sampleRate,
+        //encoding: 'linear16',
+        //sample_rate: this.sampleRate,
         smart_format: true,
-        no_delay: true, // required together with smart_format not to leave gaps in the transcript
+        //no_delay: true, // required together with smart_format not to leave gaps in the transcript
       });
       console.info('Deepgram live socket initialized');
 

@@ -70,7 +70,7 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
   public geminiTranscribeService: TranscribeService | undefined = undefined;
   private microphoneTranscriptionSubscription: Subscription | undefined;
   private geminiTranscriptionSubscription: Subscription | undefined;
-  private isDeepgramAvailable = () => !!environment.DEEPGRAM_API_KEY;
+  private isDeepgramAvailable = () => false; //!!environment.DEEPGRAM_API_KEY;
 
   // function calling setup
   // Define the function to be called.
@@ -259,7 +259,7 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
         },
         config: {
           ...this.config
-        },
+        }
       });
     });
   }

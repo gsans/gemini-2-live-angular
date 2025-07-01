@@ -121,31 +121,31 @@ export class AppComponent implements OnInit, OnDestroy {
       },
     );
 
-    if (this.multimodalLiveService.microphoneTranscribeService) {
-      this.microphoneTranscriptionSubscription = this.multimodalLiveService.microphoneTranscribeService?.stream$.subscribe(
-        (fragment: TranscriptionFragment | null) => {
-          if (!fragment) return;
-          console.log('Transcription fragment received:', fragment);
-          this.messages.push({
-            role: fragment.source,
-            text: fragment.transcript
-          });
-        },
-      );
-    }
+    // if (this.multimodalLiveService.microphoneTranscribeService) {
+    //   this.microphoneTranscriptionSubscription = this.multimodalLiveService.microphoneTranscribeService?.stream$.subscribe(
+    //     (fragment: TranscriptionFragment | null) => {
+    //       if (!fragment) return;
+    //       console.log('Transcription fragment received:', fragment);
+    //       this.messages.push({
+    //         role: fragment.source,
+    //         text: fragment.transcript
+    //       });
+    //     },
+    //   );
+    // }
 
-    if (this.multimodalLiveService.geminiTranscribeService) {
-      this.geminiTranscriptionSubscription = this.multimodalLiveService.geminiTranscribeService?.stream$.subscribe(
-        (fragment: TranscriptionFragment | null) => {
-          if (!fragment) return;
-          console.log('Transcription fragment received:', fragment);
-          this.messages.push({
-            role: fragment.source,
-            text: fragment.transcript
-          });
-        },
-      );
-    }
+    // if (this.multimodalLiveService.geminiTranscribeService) {
+    //   this.geminiTranscriptionSubscription = this.multimodalLiveService.geminiTranscribeService?.stream$.subscribe(
+    //     (fragment: TranscriptionFragment | null) => {
+    //       if (!fragment) return;
+    //       console.log('Transcription fragment received:', fragment);
+    //       this.messages.push({
+    //         role: fragment.source,
+    //         text: fragment.transcript
+    //       });
+    //     },
+    //   );
+    // }
 
     setTimeout(() => {
       this.renderer.setStyle(this.infoBox.nativeElement, "opacity", "0");
