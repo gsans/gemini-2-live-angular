@@ -95,14 +95,14 @@
       </div>
     }
     @else {
-      @for (fc of log.message?.toolResponse?.functionResponses; track $index) {
-        <div class="part">
-          <h5>Function Response: {{ fc.id }}</h5>
-          <pre><code>{{ fc.response | json }}</code></pre>
-        </div>
-      }
+    @for (fc of log.message?.toolResponse?.functionResponses; track $index) {
+      <div class="part">
+        <h5>Function Response: {{ fc.id }}</h5>
+        <pre><code>{{ fc.response | json }}</code></pre>
+      </div>
     }
-  </div>
+  }
+</div>
 </ng-template>
 
 <ng-template #modelTurnLog let-log>
@@ -120,16 +120,20 @@
     <p class="part part-text">{{ part.text }}</p>
   }
 
-  <div *ngIf="part.executableCode" class="part part-executableCode">
-    <h5>executableCode: {{ part?.executableCode?.language }}</h5>
-    <pre><code>{{ part?.executableCode?.code | unescape }}</code></pre>
-  </div>
-  
-  <div *ngIf="part.codeExecutionResult" class="part part-codeExecutionResult">
-    <h5>codeExecutionResult: {{ part?.codeExecutionResult?.outcome }}</h5>
-    <pre><code>{{ part?.codeExecutionResult?.output | unescape }}</code></pre>
-  </div>
-  
+  @if (part.executableCode) {
+    <div class="part part-executableCode">
+      <h5>executableCode: {{ part?.executableCode?.language }}</h5>
+      <pre><code>{{ part?.executableCode?.code | unescape }}</code></pre>
+    </div>
+  }
+
+  @if (part.codeExecutionResult) {
+    <div class="part part-codeExecutionResult">
+      <h5>codeExecutionResult: {{ part?.codeExecutionResult?.outcome }}</h5>
+      <pre><code>{{ part?.codeExecutionResult?.output | unescape }}</code></pre>
+    </div>
+  }
+
   @if (part?.inlineData) {
     <div class="part part-inlinedata">
       <h5>Inline Data: {{ part?.inlineData?.mimeType }}</h5>

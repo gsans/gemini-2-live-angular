@@ -9,7 +9,7 @@ import { FormControl, FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { LoggerService } from '../logging/logger.service';
 import { MultimodalLiveService } from '../../gemini/gemini-client.service';
-import { CommonModule } from '@angular/common';
+
 import { LoggerComponent } from '../logger/logger.component';
 import { CustomSelectComponent } from '../select/select.component';
 import { StreamingLog } from '../../gemini/types';
@@ -29,7 +29,7 @@ interface LogEvent {
   selector: 'app-side-panel',
   templateUrl: './side-panel.component.html',
   styleUrls: ['./side-panel.component.css'],
-  imports: [CommonModule, FormsModule,LoggerComponent, CustomSelectComponent],
+  imports: [FormsModule, LoggerComponent, CustomSelectComponent],
 })
 export class SidePanelComponent implements OnInit, OnDestroy {
   @ViewChild('inputArea') inputArea!: ElementRef<HTMLTextAreaElement>;

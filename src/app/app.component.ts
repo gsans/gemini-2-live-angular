@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { MultimodalLiveService } from '../gemini/gemini-client.service';
 import { Subscription } from 'rxjs';
 import { Part, FunctionResponse } from '@google/genai';
-import { CommonModule } from '@angular/common';
+
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ModelTurn, ToolCall, TranscriptionFragment, TurnComplete } from '../gemini/types';
 import { ControlTrayComponent } from './control-tray/control-tray.component';
@@ -18,7 +18,7 @@ type ChatMessage = {
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  imports: [CommonModule, ReactiveFormsModule, ControlTrayComponent, SidePanelComponent],
+  imports: [ReactiveFormsModule, ControlTrayComponent, SidePanelComponent],
 })
 export class AppComponent implements OnInit, OnDestroy {
   @ViewChild('myVideo') myVideoRef!: ElementRef<HTMLVideoElement>;

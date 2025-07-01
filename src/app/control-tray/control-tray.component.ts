@@ -14,7 +14,7 @@ import { Observable, Subject, takeUntil, lastValueFrom, last } from 'rxjs';
 import { AudioPulseComponent } from '../audio-pulse/audio-pulse.component';
 import { AudioRecorder } from '../../gemini/audio-recorder';
 import { MultimodalLiveService } from '../../gemini/gemini-client.service';
-import { CommonModule } from '@angular/common';
+
 import { WebcamService } from '../../gemini/webcam.service';
 import { ScreenCaptureService } from '../../gemini/screen-capture.service';
 
@@ -27,7 +27,7 @@ interface UseMediaStreamResult {
 
 @Component({
   selector: 'app-control-tray',
-  imports: [CommonModule, AudioPulseComponent],
+  imports: [AudioPulseComponent],
   templateUrl: './control-tray.component.html',
   styleUrls: ['./control-tray.component.css'],
 })
