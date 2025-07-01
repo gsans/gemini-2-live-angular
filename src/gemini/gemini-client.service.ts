@@ -101,10 +101,8 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
     speechConfig: {
       voiceConfig: { prebuiltVoiceConfig: { voiceName: "Zephyr" } }, // Puck, Charon, Kore, Fenrir, Aoede. *New* 3 voices: Leda, Orus, and Zephyr.
     },
-    generationConfig: {
-      //maxOutputTokens: 100,
-      //mediaResolution: MediaResolution.MEDIA_RESOLUTION_MEDIUM, // API only supports "low" and "medium" for now
-    },
+    maxOutputTokens: 100,
+    mediaResolution: MediaResolution.MEDIA_RESOLUTION_MEDIUM, // API only supports "low" and "medium" for now
     contextWindowCompression: {
       triggerTokens: '1000',
       slidingWindow: {
@@ -258,7 +256,7 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
           },
         },
         config: {
-          ...this.config
+          ...this.config,
         }
       });
     });
