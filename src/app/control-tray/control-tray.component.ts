@@ -40,6 +40,8 @@ export class ControlTrayComponent
 
   @ViewChild('renderCanvas') renderCanvasRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('connectButton') connectButtonRef!: ElementRef<HTMLButtonElement>;
+  @ViewChild('nativeAudio') nativeAudioRef!: ElementRef<HTMLInputElement>;
+
 
   webcamStream: UseMediaStreamResult;
   screenCaptureStream: UseMediaStreamResult;
@@ -226,7 +228,7 @@ export class ControlTrayComponent
     if (this.isConnected) {
       this.multimodalLiveService.disconnect();
     } else {
-      this.multimodalLiveService.connect();
+      this.multimodalLiveService.connect(!!this.nativeAudioRef.nativeElement.checked);
     }
   }
 

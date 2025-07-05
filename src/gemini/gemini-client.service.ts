@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, ɵRender3NgModuleRef } from '@angular/core';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import {
   GoogleGenAI,
@@ -95,35 +95,79 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
     },
   };
 
-  public config: LiveConnectConfig = {
+  public config : LiveConnectConfig = {
     // responseModalities: [Modality.TEXT],
     responseModalities: [Modality.AUDIO], // note "audio" doesn't send a text response over
-    speechConfig: {
-      voiceConfig: { prebuiltVoiceConfig: { voiceName: "Zephyr" } }, // Puck, Charon, Kore, Fenrir, Aoede. *New* 3 voices: Leda, Orus, and Zephyr.
-    },
-    maxOutputTokens: 100,
+
+    //maxOutputTokens: 100,
     mediaResolution: MediaResolution.MEDIA_RESOLUTION_MEDIUM, // API only supports "low" and "medium" for now
     contextWindowCompression: {
-      triggerTokens: '1000',
-      slidingWindow: {
-        targetTokens: '10',
-      },
+      triggerTokens: '25600',
+      slidingWindow: { targetTokens: '12800' },
     },
-    systemInstruction: {
-      parts: [
-        createPartFromText('You are a helpful assistant.'),
-      ],
-    },
-    tools: [
-      { googleSearch: {} },
-      { codeExecution: {} },
-      {
-        functionDeclarations: [
-          this.getCurrentWeatherFunction,
-        ],
-      },
-    ],
   };
+
+  private getCustomConfig(user: any) {
+    let userConfig;
+    let customConfig;
+    let model: string = "";
+
+    if (user.nativeAudio) {
+      userConfig = {
+        systemInstruction: "You are a helpful assistant. Precede every reply with a dad joke and something along the lines of 'did you get it?' and a chuckle or laugh.",
+        enableAffectiveDialog: true,
+        tools: [
+          { googleSearch: {} },
+        ],
+      };
+    } else if (user.proactive) {
+      userConfig = {
+        systemInstruction: "You are a helpful assistant.",
+        proactivity: { proactiveAudio: true },
+        tools: [
+          { googleSearch: {} },
+        ],
+      };
+    } else {
+      userConfig = {
+        systemInstruction: {
+          parts: [
+            createPartFromText('You are a helpful assistant.'),
+          ],
+        },
+        speechConfig: {
+          languageCode: 'en-US',
+          voiceConfig: {
+            prebuiltVoiceConfig: {
+              voiceName: 'Zephyr',
+            }
+          }
+        },
+        tools: [
+          { googleSearch: {} },
+          { codeExecution: {} },
+          {
+            functionDeclarations: [
+              this.getCurrentWeatherFunction,
+            ],
+          },
+        ],
+      }
+    }
+    if (!user.nativeAudio) {
+      model = "gemini-live-2.5-flash-preview";
+    } else {
+      model = "gemini-2.5-flash-preview-native-audio-dialog";
+    }
+    customConfig = {
+      model,
+      config: {
+        ...this.config,
+        ...userConfig,
+      }
+    };
+    return customConfig;
+  }
 
   constructor(
     private loggerService: LoggerService
@@ -131,6 +175,7 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
     super();
     this._ai = new GoogleGenAI({
       apiKey: environment.API_KEY,
+      apiVersion: "v1alpha",
     });
     if (this.isDeepgramAvailable()) {
       this.microphoneTranscribeService = new TranscribeService(16000, 'user');
@@ -223,17 +268,21 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
       });
   }
 
-  async connect(): Promise<boolean> {
+  async connect(nativeAudio: Boolean = false): Promise<boolean> {
+    let model: string = "";
+    let setup;
+    let userConfig: LiveConnectConfig = {};
     this._session?.close(); // Close any existing session
     this._session = null;
     if (this.isDeepgramAvailable()) {
       this.geminiTranscribeService?.stop();
     }
 
+    setup = this.getCustomConfig({ nativeAudio });
+
     return new Promise(async (resolve, reject) => {
       this._session = await this._ai.live.connect({
-        model: "gemini-2.0-flash-live-001", 
-        // Note: "gemini-2.0-flash-live-latest" and "gemini-2.0-flash-live" don't work at the moment
+        model: setup.model, 
         callbacks: {
           onopen: () => {
             this.log("client.connect", "connected");
@@ -255,9 +304,7 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
             this.emit("close", ev);
           },
         },
-        config: {
-          ...this.config,
-        }
+        config: setup.config as LiveConnectConfig,
       });
     });
   }
