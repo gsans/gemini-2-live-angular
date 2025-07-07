@@ -1,7 +1,7 @@
-# Gemini 2.0 Live API Demo
+# Gemini 2.5 Flash Live API Demo
 
 ## Overview
-This project showcases Gemini 2.0 real-time multimodal AI capabilities in a web application using Angular. Currently the Live API is only available for `Gemini 2.0 Flash Live`.
+This project showcases Gemini 2.5 real-time multimodal AI capabilities in a web application using Angular. Currently the Live API is only available for `Gemini 2.5 Flash Live`.
 
 ![diagram](https://i.imgur.com/74hv0ay.png)
 
@@ -10,6 +10,14 @@ This project demonstrates integration with Google's Gemini AI models through the
 > This project started as a migration to Angular of the [Live API - Web console](https://github.com/google-gemini/multimodal-live-api-web-console) as is only available in React at the moment.
 
 ## What's new? 
+
+[7th July]
+- New model: `Gemini 2.5 Flash Live` replaces `Gemini 2.0 Flash Live`.
+- Native audio: 30 voices, 24 languages, accents and voice effects (whispering, laughing). Tool usage is limited to function calling and search.
+- Live configuration options:
+  - Native audio: [affective dialog](https://ai.google.dev/gemini-api/docs/live-guide#affective-dialog) and [proactive audio](https://ai.google.dev/gemini-api/docs/live-guide#proactive-audio) options.
+  - Cascade audio: new [language support](https://ai.google.dev/gemini-api/docs/live-guide#supported-languages).
+- Previous models are referred as half-cascade or cascade audio: `gemini-live-2.5-flash-preview` and `gemini-2.0-flash-live-001`. As opposed to new native audio models, these models go through a two step process: native audio input and text-to-speech output. All tool usage options are available. More details about how to choose your audio architecture [here](https://ai.google.dev/gemini-api/docs/live#audio-generation).
 
 [10th April]
 - New model: `Gemini 2.0 Flash Live` replaces `Gemini 2.0 Flash Experimental`.
@@ -23,9 +31,10 @@ This project demonstrates integration with Google's Gemini AI models through the
 
 ## Core Features
 - Starter kit based on [Live API - Web console](https://github.com/google-gemini/multimodal-live-api-web-console)
-- TypeScript GenAI SDK for Gemini 2.0 API
-- Real-time streaming voice from and to Gemini 2.0 Live API
-- Real-time streaming video from webcam or screen to Gemini 2.0 Live API
+- TypeScript GenAI SDK for Gemini 2.5 API
+- Real-time streaming voice from and to Gemini 2.5 Live API
+- Real-time streaming video from webcam or screen to Gemini 2.5 Live API
+- Support for both native and cascade audio models
 - Natural language text generation
 - Interactive chat functionality
 - Google Search integration for current information
@@ -33,11 +42,11 @@ This project demonstrates integration with Google's Gemini AI models through the
 - Automated function calling for API integration
 - Live transcription for streamed audio (user and model) via Deepgram API (optional)
 
-## What's Gemini 2.0 Live?
+## What's Gemini 2.5 Live?
 
 Gemini Live API enables a new generation of dynamic, multimodal AI real-time experiences.
 
-### Gemini Live (available on Pixel 9)
+### The Gemini App (available for Android and iOS)
 Gemini Live powers innovative applications across devices and platforms:
 
 - **Hands-free AI Assistance**: Users interact naturally through voice while cooking, driving, or multitasking
@@ -47,7 +56,7 @@ Gemini Live powers innovative applications across devices and platforms:
 - **Live Problem Solving**: Share your screen to get real-time guidance, troubleshooting, or explanations
 - **Integration with Google services**: leverage existing Google services like Search or Maps to enhance its capabilities
 
-[![Gemini Live on Pixel 9](https://img.youtube.com/vi/mNTGbi5ReMc/0.jpg)](https://www.youtube.com/watch?v=mNTGbi5ReMc)
+[![Gemini App on Pixel 9](https://img.youtube.com/vi/mNTGbi5ReMc/0.jpg)](https://www.youtube.com/watch?v=mNTGbi5ReMc)
 
 ### Project Astra
 
@@ -65,7 +74,7 @@ Project Astra is a research initiative aimed at developing a universal AI assist
 - Google AI API key from [Google AI Studio](https://makersuite.google.com/)
 - Deepgram API key from [Deepgram](https://deepgram.com/) (optional)
 
-> Note that currently `Gemini 2.0 Flash Live` (audio modality) doesn't send any transcript which may confuse you. We are using Deepgram to transcribe both the user's audio and the model's audio. To enable it just create an Api Key and add it to the development environment.
+> Note that currently `Gemini 2.5 Flash Live` only sends transcript information when using Vertex AI. You can use Deepgram to transcribe both the user's audio and the model's audio from a Web Client if needed. To enable it just create an Api Key and add it to the development environment.
 
 ### Installation Steps
 
@@ -90,9 +99,9 @@ Project Astra is a research initiative aimed at developing a universal AI assist
 
 ### Getting Started
 1. Launch the application and click the `Connect` button under `Connection Status`
-2. The demo uses Gemini 2.0 Live API which requires a WebSocket connection
+2. The demo uses Gemini 2.5 Live API which requires a WebSocket connection
 3. Monitor the browser's Developer Tools Console for connection issues
-4. Before diving into development, explore Gemini 2.0's Live capabilities (voice interactions, webcam, and screen sharing) using [Google AI Studio Live](https://aistudio.google.com/live). This interactive playground will help you understand the available features and integration options before implementing them in your project.
+4. Before diving into development, explore Gemini 2.5's Live capabilities (voice interactions, webcam, and screen sharing) using [Google AI Studio Live](https://aistudio.google.com/live). This interactive playground will help you understand the available features and integration options before implementing them in your project.
 
 ### Feature Testing Examples
 Test the various capabilities using these example prompts:
@@ -163,9 +172,9 @@ Access the application at `http://localhost:4200/`
      Note: Select and install your preferred E2E testing framework
 
 ## Project Information
-- Built with Angular CLI version 19.2.3
+- Built with Angular CLI version 20.0.4
 - Logging state management including Dev Tools with NgRx version 19.0.1
-- TypeScript GenAI SDK version 0.12.0
+- TypeScript GenAI SDK version 1.18.0
 - Features automatic reload during development
 - Includes production build optimizations
 
