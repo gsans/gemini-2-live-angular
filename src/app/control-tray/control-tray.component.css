@@ -183,11 +183,18 @@
   cursor: default;
 }
 
-
 /* https://alvaromontoro.com/blog/68017/creating-a-css-only-toggle-switch */
 
+.native-audio-button {
+  padding-top: 5px;
+  font-size: 10px;
+}
 .native-audio-container {
-  transform: scale(0.8);
+  width: 85px;
+}
+.native-audio-container label {
+  padding-right: 5px;
+  user-select: none;
 }
 
 input:where([type="checkbox"][role="switch"]) {

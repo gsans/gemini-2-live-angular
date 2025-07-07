@@ -158,6 +158,10 @@ h2 {
   z-index: 2;
 }
 
+.side-panel .input-container .input-content .send-button:enabled {
+  color: var(--Neutral-80);
+}
+
 .side-panel .indicators .streaming-indicator {
   -webkit-user-select: none;
   user-select: none;

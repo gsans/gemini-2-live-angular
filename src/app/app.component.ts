@@ -160,7 +160,16 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   connect(): void {
-    this.multimodalLiveService.connect().catch(err => {
+    this.multimodalLiveService.connect({
+      affective: false,
+      proactive: false, 
+    }).then(() => {
+      console.log("Connected successfully");
+      this.isConnected = true;
+      this.streamedMessage = ''; // reset streamed message
+      this.messages = []; // reset messages
+      this.chatForm.reset();
+    }).catch(err => {
       console.error("Failed to connect:", err);
     });
   }

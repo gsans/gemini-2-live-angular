@@ -112,7 +112,7 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
     let customConfig;
     let model: string = "";
 
-    if (user.nativeAudio) {
+    if (user.affectiveAudio && !user.proactiveAudio) {
       userConfig = {
         systemInstruction: "You are a helpful assistant. Precede every reply with a dad joke and something along the lines of 'did you get it?' and a chuckle or laugh.",
         enableAffectiveDialog: true,
@@ -120,7 +120,7 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
           { googleSearch: {} },
         ],
       };
-    } else if (user.proactive) {
+    } else if (!user.affectiveAudio && user.proactiveAudio) {
       userConfig = {
         systemInstruction: "You are a helpful assistant.",
         proactivity: { proactiveAudio: true },
@@ -154,7 +154,7 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
         ],
       }
     }
-    if (!user.nativeAudio) {
+    if (!user.affectiveAudio && !user.proactiveAudio) {
       model = "gemini-live-2.5-flash-preview";
     } else {
       model = "gemini-2.5-flash-preview-native-audio-dialog";
@@ -268,7 +268,7 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
       });
   }
 
-  async connect(nativeAudio: Boolean = false): Promise<boolean> {
+  async connect(nativeAudio: any): Promise<boolean> {
     let model: string = "";
     let setup;
     let userConfig: LiveConnectConfig = {};
@@ -278,7 +278,7 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
       this.geminiTranscribeService?.stop();
     }
 
-    setup = this.getCustomConfig({ nativeAudio });
+    setup = this.getCustomConfig(nativeAudio);
 
     return new Promise(async (resolve, reject) => {
       this._session = await this._ai.live.connect({

@@ -44,8 +44,14 @@
     </div>
     <span class="text-indicator">Streaming</span>
   </div>
-  <div class="native-audio-container">
-    <label for="ms1">Native Audio</label>
-    <input #nativeAudio type="checkbox" role="switch" />
-  </div>
+    <div>
+      <div class="native-audio-container native-audio-button">
+        <label for="ms2">Affective</label>
+        <input id="affectiveAudio" #affectiveAudio type="checkbox" role="switch" (change)="toggleNativeAudio($event)"/>
+      </div>
+      <div class="native-audio-container native-audio-button">
+        <label for="ms2">Proactive</label>
+        <input id="proactiveAudio" #proactiveAudio type="checkbox" role="switch" (change)="toggleNativeAudio($event)" />
+      </div>
+    </div>
 </section>

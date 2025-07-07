@@ -40,7 +40,8 @@ export class ControlTrayComponent
 
   @ViewChild('renderCanvas') renderCanvasRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('connectButton') connectButtonRef!: ElementRef<HTMLButtonElement>;
-  @ViewChild('nativeAudio') nativeAudioRef!: ElementRef<HTMLInputElement>;
+  @ViewChild('affectiveAudio') affectiveAudioRef!: ElementRef<HTMLInputElement>;
+  @ViewChild('proactiveAudio') proactiveAudioRef!: ElementRef<HTMLInputElement>;
 
 
   webcamStream: UseMediaStreamResult;
@@ -226,9 +227,25 @@ export class ControlTrayComponent
 
   connectToggle(): void {
     if (this.isConnected) {
+      this.affectiveAudioRef.nativeElement.disabled = false;
+      this.proactiveAudioRef.nativeElement.disabled = false;
       this.multimodalLiveService.disconnect();
     } else {
-      this.multimodalLiveService.connect(!!this.nativeAudioRef.nativeElement.checked);
+      this.affectiveAudioRef.nativeElement.disabled = true;
+      this.proactiveAudioRef.nativeElement.disabled = true;
+      this.multimodalLiveService.connect({
+        affectiveAudio: !!this.affectiveAudioRef.nativeElement.checked,
+        proactiveAudio: !!this.proactiveAudioRef.nativeElement.checked,
+      });
+    }
+  }
+
+  toggleNativeAudio(event: any): void {
+    if (event.target.id === 'affectiveAudio') {
+      this.proactiveAudioRef.nativeElement.checked = false; // Ensure only one is checked
+    } 
+    if (event.target.id === 'proactiveAudio') {
+      this.affectiveAudioRef.nativeElement.checked = false; // Ensure only one is checked
     }
   }
 
