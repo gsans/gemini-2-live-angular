@@ -7,10 +7,15 @@ import { z } from 'zod';
 // mcp documentation: https://modelcontextprotocol.io/introduction
 // mcp SDK: https://github.com/modelcontextprotocol/typescript-sdk
 
+const MCP_SERVER_NAME = "Multiply Server";
+const MCP_SERVER_VERSION = "1.0.0";
+const MCP_CLIENT_NAME = "Multiply Client";
+const MCP_CLIENT_VERSION = "1.0.0";
+
 async function createMultiplyClient(): Promise<Client> {
   const server = new McpServer({
-    name: "Multiply Server",
-    version: "1.0.0",
+    name: MCP_SERVER_NAME,
+    version: MCP_SERVER_VERSION,
   });
 
   server.registerTool("multiply",
@@ -27,6 +32,7 @@ async function createMultiplyClient(): Promise<Client> {
         firstNumber: firstNumber,
         secondNumber: secondNumber,
         multiplicationResult: firstNumber * secondNumber,
+        mcp_server: `${MCP_SERVER_NAME} (${MCP_SERVER_VERSION})`,
       };
       return {
         content: [{

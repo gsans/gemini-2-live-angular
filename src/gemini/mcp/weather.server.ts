@@ -7,10 +7,15 @@ import { z } from 'zod';
 // mcp documentation: https://modelcontextprotocol.io/introduction
 // mcp SDK: https://github.com/modelcontextprotocol/typescript-sdk
 
+const MCP_SERVER_NAME = "Weather Server";
+const MCP_SERVER_VERSION = "1.0.0";
+const MCP_CLIENT_NAME = "Weather Client";
+const MCP_CLIENT_VERSION = "1.0.0";
+
 async function createWeatherClient(): Promise<Client> {
   const server = new McpServer({
-    name: "Weather Server",
-    version: "1.0.0",
+    name: MCP_SERVER_NAME,
+    version: MCP_SERVER_VERSION,
   });
 
   server.registerTool("getCurrentTemperature",
@@ -30,6 +35,7 @@ async function createWeatherClient(): Promise<Client> {
       const structuredContent = {
         location,
         temperature: "25°" + (unit.toLowerCase() === "celsius" ? "C" : "F"),
+        mcp_server: `${MCP_SERVER_NAME} (${MCP_SERVER_VERSION})`,
       };
 
       return {
@@ -46,8 +52,8 @@ async function createWeatherClient(): Promise<Client> {
   await server.connect(transports[0]);
 
   const client = new Client({
-    name: "Weather Client",
-    version: "1.0.0",
+    name: MCP_CLIENT_NAME,
+    version: MCP_CLIENT_VERSION,
   });
   client.connect(transports[1]);
 
