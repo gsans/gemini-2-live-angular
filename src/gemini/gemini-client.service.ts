@@ -42,6 +42,7 @@ import { audioContext, blobToJSON, base64ToArrayBuffer } from './utils';
 import { Modality } from '@google/genai';
 import { TranscribeService } from './transcribe.service';
 import { LoggerService } from '../app/logging/logger.service';
+import { McpService } from './gemini-mcp.service';
 
 /**
  * A event-emitting class that manages the connection to the websocket and emits
@@ -54,6 +55,8 @@ import { LoggerService } from '../app/logging/logger.service';
 export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEventTypes> implements OnDestroy {
   private _ai: GoogleGenAI;
   private _session: Session | null = null;
+  public mcpService: McpService = new McpService();
+
 
   private connectedSubject = new BehaviorSubject<boolean>(false);
   connected$ = this.connectedSubject.asObservable();
@@ -107,7 +110,7 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
     },
   };
 
-  private getCustomConfig(user: any) {
+  private async getCustomConfig(user: any) {
     let userConfig;
     let customConfig;
     let model: string = "";
@@ -146,11 +149,13 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
         tools: [
           { googleSearch: {} },
           { codeExecution: {} },
-          {
-            functionDeclarations: [
-              this.getCurrentWeatherFunction,
-            ],
-          },
+          // vanilla function calling
+          // {
+          //   functionDeclarations: [
+          //     this.getCurrentWeatherFunction,
+          //   ],
+          // },
+          await this.mcpService.start(),
         ],
       }
     }
@@ -173,6 +178,7 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
     private loggerService: LoggerService
   ) {
     super();
+
     this._ai = new GoogleGenAI({
       apiKey: environment.API_KEY,
       apiVersion: "v1alpha",
@@ -212,7 +218,8 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
     this.loggerService.log(log);
   }
 
-  ngOnDestroy(): void {
+  async ngOnDestroy(): Promise<void> {
+    await this.mcpService.stop();
     this.destroy$.next();
     this.destroy$.complete();
     this.disconnect(); // Ensure disconnection on service destruction
@@ -278,7 +285,7 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
       this.geminiTranscribeService?.stop();
     }
 
-    setup = this.getCustomConfig(nativeAudio);
+    setup = await this.getCustomConfig(nativeAudio);
 
     return new Promise(async (resolve, reject) => {
       this._session = await this._ai.live.connect({
@@ -309,7 +316,8 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
     });
   }
 
-  disconnect() {
+  async disconnect() {
+    await this.mcpService.stop();
     this._session?.close();
     this._session = null;
     this.stopAudioStreamer(); // Stop audio on disconnect

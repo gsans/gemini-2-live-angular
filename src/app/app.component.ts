@@ -83,41 +83,55 @@ export class AppComponent implements OnInit, OnDestroy {
     );
     this.toolSubscription = this.multimodalLiveService.tool$.subscribe(
       (data) => {
-        // Executable function code.
-        interface WeatherParams {
-          location: string;
-          unit: string;
-        }
-        const functions = {
-          getCurrentWeather: ({ location, unit }: WeatherParams) => {
-            // mock API response
-            return {
-              location,
-              temperature: "25°" + (unit.toLowerCase() === "celsius" ? "C" : "F"),
-            };
-          }
-        };
-
+        // // Executable function code.
+        // interface WeatherParams {
+        //   location: string;
+        //   unit: string;
+        // }
+        // const functions = {
+        //   getCurrentWeather: ({ location, unit }: WeatherParams) => {
+        //     // mock API response
+        //     return {
+        //       location,
+        //       temperature: "25°" + (unit.toLowerCase() === "celsius" ? "C" : "F"),
+        //     };
+        //   }
+        // };
         if (!data) return;
         let toolCall = data as ToolCall;
         const call = toolCall.functionCalls?.[0];
         const id = toolCall.functionCalls?.[0].id;
         if (call) {
-          // Call the actual function
-          if (call.name === "getCurrentWeather" && call.args) {
-            // Remember to add additional checks for the function name and parameters
-            const { location, unit } = call.args as { location: string, unit: string };
-            const callResponse = functions[call.name]({ location, unit }) as Record<string, string>;
-            // Send the API response back to the model
+          // Call the actual function using mcp
+          this.multimodalLiveService.mcpService.execute({
+            name: call.name,
+            arguments: call.args,
+          }).then((response: any) => {
+            //Send the API response back to the model
             this.multimodalLiveService.sendToolResponse({
               functionResponses: {
                 id,
                 name: call.name,
-                response: callResponse,
+                response: response?.structuredContent, // Note: needs to match the MCP server tool definition
               } as FunctionResponse,
             } as any);
-          }
+          });
         }
+
+          // if (call.name === "getCurrentWeather" && call.args) {
+          //   // Remember to add additional checks for the function name and parameters
+          //   const { location, unit } = call.args as { location: string, unit: string };
+          //   const callResponse = functions[call.name]({ location, unit }) as Record<string, string>;
+          //   // Send the API response back to the model
+          //   this.multimodalLiveService.sendToolResponse({
+          //     functionResponses: {
+          //       id,
+          //       name: call.name,
+          //       response: callResponse,
+          //     } as FunctionResponse,
+          //   } as any);
+          // }
+        //   console.log('Tool call received:', toolCall);}
       },
     );
 

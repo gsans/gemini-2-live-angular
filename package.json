@@ -20,6 +20,7 @@
     "@angular/router": "^20.0.5",
     "@deepgram/sdk": "^3.11.2",
     "@google/genai": "^1.8.0",
+    "@modelcontextprotocol/sdk": "^1.15.0",
     "@ngrx/effects": "^19.0.1",
     "@ngrx/store": "^19.0.1",
     "@ngrx/store-devtools": "^19.0.1",
@@ -27,6 +28,7 @@
     "lodash": "^4.17.21",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
+    "zod": "^3.25.76",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {

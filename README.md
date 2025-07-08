@@ -11,6 +11,10 @@ This project demonstrates integration with Google's Gemini AI models through the
 
 ## What's new? 
 
+[8th July]
+- Added MCP support. Integrated Model Context Protocol SDK with access to two servers: weather and multiplication. 
+- Function calling is not available for native audio. Make sure the `affective` and `proactive` flags are disabled. To use you can try prompts like `What's the temperature in Barcelona?` or `Multiply 2 by 2`. You can inspect the `tool call` and `tool responses` by expanding the left side panel.
+
 [7th July]
 - New model: `Gemini 2.5 Flash Live` replaces `Gemini 2.0 Flash Live`.
 - Native audio: 30 voices, 24 languages, accents and voice effects (whispering, laughing). Tool usage is limited to function calling and search.
@@ -32,6 +36,7 @@ This project demonstrates integration with Google's Gemini AI models through the
 ## Core Features
 - Starter kit based on [Live API - Web console](https://github.com/google-gemini/multimodal-live-api-web-console)
 - TypeScript GenAI SDK for Gemini 2.5 API
+- MCP support: Typescript MCP SDK
 - Real-time streaming voice from and to Gemini 2.5 Live API
 - Real-time streaming video from webcam or screen to Gemini 2.5 Live API
 - Support for both native and cascade audio models
@@ -175,6 +180,7 @@ Access the application at `http://localhost:4200/`
 - Built with Angular CLI version 20.0.4
 - Logging state management including Dev Tools with NgRx version 19.0.1
 - TypeScript GenAI SDK version 1.18.0
+- Typescript SDK for Model Context Protocol version 1.15.0
 - Features automatic reload during development
 - Includes production build optimizations
 
