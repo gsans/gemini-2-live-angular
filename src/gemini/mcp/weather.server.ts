@@ -29,6 +29,7 @@ async function createWeatherClient(): Promise<Client> {
       outputSchema: {
         location: z.string().describe("The city and state, e.g. San Francisco, CA"),
         temperature: z.string().describe("The current temperature in the specified unit, e.g. '25°C' or '77°F'"),
+        mcp_server: z.string().describe("The name and version of the MCP server that provided this information"),
       },
     },
     async ({ location = "London", unit = "celsius" }) => {
