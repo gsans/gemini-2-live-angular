@@ -149,6 +149,7 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
         tools: [
           { googleSearch: {} },
           { codeExecution: {} },
+          // { urlContext: {} }, // cannot be used together with Search or CodeExecution
           // vanilla function calling
           // {
           //   functionDeclarations: [
