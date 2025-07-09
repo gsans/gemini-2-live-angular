@@ -1,5 +1,7 @@
 # Gemini 2.5 Flash Live API Demo
 
+https://github.com/user-attachments/assets/c4a0ebaa-fc1a-486f-89da-26b5c26c6dd6
+
 ## Overview
 This project showcases Gemini 2.5 real-time multimodal AI capabilities in a web application using Angular. Currently the Live API is only available for `Gemini 2.5 Flash Live`.
 
