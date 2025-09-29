@@ -41,7 +41,7 @@
 
   <div class="input-container" [class.disabled]="!connected">
     <div class="input-content">
-      <textarea #inputArea class="input-area" [(ngModel)]="textInput" (keydown)="onKeyDown($event)"></textarea>
+      <textarea id="prompt" #inputArea class="input-area" [(ngModel)]="textInput" (keydown)="onKeyDown($event)"></textarea>
 
       <span class="input-content-placeholder" [class.hidden]="textInput.length > 0">
         Type&nbsp;something...
