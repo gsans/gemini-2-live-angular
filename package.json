@@ -20,7 +20,7 @@
     "@angular/router": "^20.3.2",
     "@deepgram/sdk": "^3.11.2",
     "@google/genai": "^1.8.0",
-    "@modelcontextprotocol/sdk": "^1.18.2",
+    "@modelcontextprotocol/sdk": "^1.15.0",
     "@ngrx/effects": "^20.0.0",
     "@ngrx/store": "^20.0.0",
     "@ngrx/store-devtools": "^20.0.0",
