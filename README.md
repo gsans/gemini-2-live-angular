@@ -1,9 +1,9 @@
-# Gemini 2.5 Flash Live API Demo
+# Gemini 2.5 Flash Native Audio (Live API) Demo
 
 https://github.com/user-attachments/assets/c4a0ebaa-fc1a-486f-89da-26b5c26c6dd6
 
 ## Overview
-This project showcases Gemini 2.5 real-time multimodal AI capabilities in a web application using Angular. Currently the Live API is only available for `Gemini 2.5 Flash Live`.
+This project showcases Gemini 2.5 real-time multimodal AI capabilities in a web application using Angular. Currently the Live API is set to use `Gemini 2.5 Flash Native Audio Preview`.
 
 ![diagram](https://i.imgur.com/74hv0ay.png)
 
@@ -12,6 +12,13 @@ This project demonstrates integration with Google's Gemini AI models through the
 > This project started as a migration to Angular of the [Live API - Web console](https://github.com/google-gemini/multimodal-live-api-web-console) as is only available in React at the moment.
 
 ## What's new? 
+
+[30th September]
+- New model: `Gemini 2.5 Flash Native Audio Preview` replaces `Gemini 2.0 Flash Live`.
+- Updated to latest model `gemini-2.5-flash-native-audio-preview-09-2025`.
+- Updated all dependencies.
+- Known issue: MCP Server specs are not compatible with GenAI SDK (1.9.0 or later). See details [here](https://github.com/googleapis/js-genai/issues/990) 
+- Known issue: MCP Weather Server definition for `getCurrentTemperature` is not working with MCP SDK (1.8.2) downgrading to MCP SDK (1.5.0) until resolved.
 
 [8th July]
 - Added MCP support. Integrated Model Context Protocol SDK with access to two servers: weather and multiplication. 
@@ -81,7 +88,7 @@ Project Astra is a research initiative aimed at developing a universal AI assist
 - Google AI API key from [Google AI Studio](https://makersuite.google.com/)
 - Deepgram API key from [Deepgram](https://deepgram.com/) (optional)
 
-> Note that currently `Gemini 2.5 Flash Live` only sends transcript information when using Vertex AI. You can use Deepgram to transcribe both the user's audio and the model's audio from a Web Client if needed. To enable it just create an Api Key and add it to the development environment.
+> Note that currently `Gemini 2.5 Flash Native Audio` only sends transcript information when using Vertex AI. You can use Deepgram to transcribe both the user's audio and the model's audio from a Web Client if needed. To enable it just create an API Key and add it to the development environment.
 
 ### Installation Steps
 
@@ -179,9 +186,9 @@ Access the application at `http://localhost:4200/`
      Note: Select and install your preferred E2E testing framework
 
 ## Project Information
-- Built with Angular CLI version 20.0.4
-- Logging state management including Dev Tools with NgRx version 19.0.1
-- TypeScript GenAI SDK version 1.18.0
+- Built with Angular CLI version 20.3.3
+- Logging state management including Dev Tools with NgRx version 20.0.0
+- TypeScript GenAI SDK version 1.8.0
 - Typescript SDK for Model Context Protocol version 1.15.0
 - Features automatic reload during development
 - Includes production build optimizations

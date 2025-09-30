@@ -139,7 +139,7 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
           ],
         },
         speechConfig: {
-          languageCode: 'en-US',
+          //languageCode: 'en-US',
           voiceConfig: {
             prebuiltVoiceConfig: {
               voiceName: 'Zephyr',
@@ -160,11 +160,12 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
         ],
       }
     }
-    if (!user.affectiveAudio && !user.proactiveAudio) {
-      model = "gemini-live-2.5-flash-preview";
-    } else {
-      model = "gemini-2.5-flash-preview-native-audio-dialog";
-    }
+    // if (!user.affectiveAudio && !user.proactiveAudio) {
+    //   model = "gemini-live-2.5-flash-preview";
+    // } else {
+    //   model = "gemini-2.5-flash-preview-native-audio-dialog";
+    // }
+    model = "gemini-2.5-flash-native-audio-preview-09-2025";
     customConfig = {
       model,
       config: {
