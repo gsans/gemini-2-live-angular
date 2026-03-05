@@ -40,7 +40,7 @@ import { AudioStreamer } from './audio-streamer';
 import VolMeterWorket from './worklet.vol-meter';
 import { audioContext, blobToJSON, base64ToArrayBuffer } from './utils';
 import { Modality } from '@google/genai';
-import { TranscribeService } from './transcribe.service';
+
 import { LoggerService } from '../app/logging/logger.service';
 import { McpService } from './gemini-mcp.service';
 
@@ -69,11 +69,15 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
   private volumeSubject = new BehaviorSubject<number>(0);
   volume$ = this.volumeSubject.asObservable();
   private destroy$ = new Subject<void>(); // For unsubscribing
-  public microphoneTranscribeService: TranscribeService | undefined = undefined;
-  public geminiTranscribeService: TranscribeService | undefined = undefined;
   private microphoneTranscriptionSubscription: Subscription | undefined;
   private geminiTranscriptionSubscription: Subscription | undefined;
-  private isDeepgramAvailable = () => false; //!!environment.DEEPGRAM_API_KEY;
+
+  // Native transcription buffering
+  private userTranscriptBuffer: string = '';
+  private modelTranscriptBuffer: string = '';
+  private userTranscriptTimeout: ReturnType<typeof setTimeout> | null = null;
+  private modelTranscriptTimeout: ReturnType<typeof setTimeout> | null = null;
+  private static readonly TRANSCRIPT_FLUSH_TIMEOUT_MS = 2000;
 
   // function calling setup
   // Define the function to be called.
@@ -98,7 +102,7 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
     },
   };
 
-  public config : LiveConnectConfig = {
+  public config: LiveConnectConfig = {
     // responseModalities: [Modality.TEXT],
     responseModalities: [Modality.AUDIO], // note "audio" doesn't send a text response over
 
@@ -108,6 +112,9 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
       triggerTokens: '25600',
       slidingWindow: { targetTokens: '12800' },
     },
+    // Native Gemini transcription (no Deepgram needed)
+    inputAudioTranscription: {},
+    outputAudioTranscription: {},
   };
 
   private async getCustomConfig(user: any) {
@@ -165,7 +172,7 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
     // } else {
     //   model = "gemini-2.5-flash-preview-native-audio-dialog";
     // }
-    model = "gemini-2.5-flash-native-audio-preview-09-2025";
+    model = "gemini-2.5-flash-native-audio-latest";
     customConfig = {
       model,
       config: {
@@ -185,29 +192,8 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
       apiKey: environment.API_KEY,
       apiVersion: "v1alpha",
     });
-    if (this.isDeepgramAvailable()) {
-      this.microphoneTranscribeService = new TranscribeService(16000, 'user');
-      this.geminiTranscribeService = new TranscribeService(24000, 'model');
-      this.initializeTranscriptionLogs();
-    }
     this.initializeAudioStreamer();
     this.setupEventListeners();
-  }
-
-  initializeTranscriptionLogs() {
-    this.microphoneTranscriptionSubscription = this.microphoneTranscribeService?.stream$.subscribe(
-      (fragment: TranscriptionFragment | null) => {
-        if (!fragment) return;
-        this.log('user-transcript', fragment.transcript);
-      },
-    );
-
-    this.geminiTranscriptionSubscription = this.geminiTranscribeService?.stream$.subscribe(
-      (fragment: TranscriptionFragment | null) => {
-        if (!fragment) return;
-        this.log('model-transcript', fragment.transcript);
-      },
-    );
   }
 
   log(type: string, message: StreamingLog["message"]) {
@@ -248,9 +234,6 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
     this.on('open', () => {
       console.log('Gemini API: connection opened');
       this.setConnected(true);
-      if (this.isDeepgramAvailable()) {
-        this.geminiTranscribeService?.start();
-      }
     })
 
       .on('content', (data: ServerContent) => {
@@ -283,15 +266,12 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
     let userConfig: LiveConnectConfig = {};
     this._session?.close(); // Close any existing session
     this._session = null;
-    if (this.isDeepgramAvailable()) {
-      this.geminiTranscribeService?.stop();
-    }
 
     setup = await this.getCustomConfig(nativeAudio);
 
     return new Promise(async (resolve, reject) => {
       this._session = await this._ai.live.connect({
-        model: setup.model, 
+        model: setup.model,
         callbacks: {
           onopen: () => {
             this.log("client.connect", "connected");
@@ -323,10 +303,6 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
     this._session?.close();
     this._session = null;
     this.stopAudioStreamer(); // Stop audio on disconnect
-    if (this.isDeepgramAvailable()) {
-      this.microphoneTranscribeService?.stop();
-      this.geminiTranscribeService?.stop();
-    }
     this.setConnected(false);
   }
 
@@ -352,12 +328,24 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
     // or contentUpdate { end_of_turn: true }
     if (isServerContentMessage(response)) {
       const { serverContent } = response;
+
+      // Handle native Gemini transcription — buffer by turn
+      const sc = serverContent as any;
+      if (sc.inputTranscription?.text) {
+        this.bufferTranscript('user', sc.inputTranscription.text);
+      }
+      if (sc.outputTranscription?.text) {
+        this.bufferTranscript('model', sc.outputTranscription.text);
+      }
+
       if (isInterrupted(serverContent)) {
+        this.flushTranscripts(); // flush any pending transcripts on interruption
         this.log("receive.serverContent", "interrupted");
         this.emit("interrupted");
         return;
       }
       if (isTurnComplete(serverContent)) {
+        this.flushTranscripts(); // flush buffered transcripts at end of turn
         this.log("server.send", "turnComplete");
         this.emit("turncomplete");
         //plausible theres more to the message, continue
@@ -396,6 +384,48 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
     } else {
       console.log("received unmatched message", response);
     }
+  }
+
+  /**
+   * Buffer transcription fragments and reset the inactivity timeout.
+   */
+  private bufferTranscript(source: 'user' | 'model', text: string): void {
+    if (source === 'user') {
+      this.userTranscriptBuffer += text;
+      if (this.userTranscriptTimeout) clearTimeout(this.userTranscriptTimeout);
+      this.userTranscriptTimeout = setTimeout(() => this.flushUserTranscript(), MultimodalLiveService.TRANSCRIPT_FLUSH_TIMEOUT_MS);
+    } else {
+      this.modelTranscriptBuffer += text;
+      if (this.modelTranscriptTimeout) clearTimeout(this.modelTranscriptTimeout);
+      this.modelTranscriptTimeout = setTimeout(() => this.flushModelTranscript(), MultimodalLiveService.TRANSCRIPT_FLUSH_TIMEOUT_MS);
+    }
+  }
+
+  private flushUserTranscript(): void {
+    if (this.userTranscriptBuffer.trim()) {
+      this.log('user-transcript', this.userTranscriptBuffer.trim());
+    }
+    this.userTranscriptBuffer = '';
+    if (this.userTranscriptTimeout) {
+      clearTimeout(this.userTranscriptTimeout);
+      this.userTranscriptTimeout = null;
+    }
+  }
+
+  private flushModelTranscript(): void {
+    if (this.modelTranscriptBuffer.trim()) {
+      this.log('model-transcript', this.modelTranscriptBuffer.trim());
+    }
+    this.modelTranscriptBuffer = '';
+    if (this.modelTranscriptTimeout) {
+      clearTimeout(this.modelTranscriptTimeout);
+      this.modelTranscriptTimeout = null;
+    }
+  }
+
+  private flushTranscripts(): void {
+    this.flushUserTranscript();
+    this.flushModelTranscript();
   }
 
   /**
@@ -454,9 +484,6 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
   private addAudioData(data: ArrayBuffer): void {
     if (this.audioStreamer) {
       this.audioStreamer.addPCM16(new Uint8Array(data));
-      if (this.isDeepgramAvailable()) {
-        this.geminiTranscribeService?.sendAudioData(new Uint8Array(data));
-      }
     }
   }
 

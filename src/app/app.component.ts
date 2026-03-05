@@ -62,7 +62,7 @@ export class AppComponent implements OnInit, OnDestroy {
         if (turn) {
           if (this.streamedMessage.length > 0) {
             this.messages.pop();
-          } 
+          }
           let incomingMessage = turn.modelTurn.parts?.[0]?.text as string;
           if (incomingMessage) {
             this.streamedMessage += incomingMessage;
@@ -107,63 +107,53 @@ export class AppComponent implements OnInit, OnDestroy {
             name: call.name,
             arguments: call.args,
           }).then((response: any) => {
+            // Try to extract the response, falling back to parsing the MCP text content.
+            let apiResponse = response?.structuredContent;
+            if (!apiResponse && response?.content?.[0] && typeof response.content[0].text === 'string') {
+              try {
+                apiResponse = JSON.parse(response.content[0].text);
+              } catch (e) {
+                // Not valid JSON, probably an error string
+                console.warn('Tool returned non-JSON string:', response.content[0].text);
+                apiResponse = { error: response.content[0].text };
+              }
+            } else if (!apiResponse) {
+              apiResponse = response;
+            }
+
             //Send the API response back to the model
             this.multimodalLiveService.sendToolResponse({
-              functionResponses: {
+              functionResponses: [{
                 id,
                 name: call.name,
-                response: response?.structuredContent, // Note: needs to match the MCP server tool definition
-              } as FunctionResponse,
+                response: apiResponse,
+              }],
             } as any);
           });
         }
 
-          // if (call.name === "getCurrentWeather" && call.args) {
-          //   // Remember to add additional checks for the function name and parameters
-          //   const { location, unit } = call.args as { location: string, unit: string };
-          //   const callResponse = functions[call.name]({ location, unit }) as Record<string, string>;
-          //   // Send the API response back to the model
-          //   this.multimodalLiveService.sendToolResponse({
-          //     functionResponses: {
-          //       id,
-          //       name: call.name,
-          //       response: callResponse,
-          //     } as FunctionResponse,
-          //   } as any);
-          // }
+        // if (call.name === "getCurrentWeather" && call.args) {
+        //   // Remember to add additional checks for the function name and parameters
+        //   const { location, unit } = call.args as { location: string, unit: string };
+        //   const callResponse = functions[call.name]({ location, unit }) as Record<string, string>;
+        //   // Send the API response back to the model
+        //   this.multimodalLiveService.sendToolResponse({
+        //     functionResponses: {
+        //       id,
+        //       name: call.name,
+        //       response: callResponse,
+        //     } as FunctionResponse,
+        //   } as any);
+        // }
         //   console.log('Tool call received:', toolCall);}
       },
     );
 
-    // if (this.multimodalLiveService.microphoneTranscribeService) {
-    //   this.microphoneTranscriptionSubscription = this.multimodalLiveService.microphoneTranscribeService?.stream$.subscribe(
-    //     (fragment: TranscriptionFragment | null) => {
-    //       if (!fragment) return;
-    //       console.log('Transcription fragment received:', fragment);
-    //       this.messages.push({
-    //         role: fragment.source,
-    //         text: fragment.transcript
-    //       });
-    //     },
-    //   );
-    // }
 
-    // if (this.multimodalLiveService.geminiTranscribeService) {
-    //   this.geminiTranscriptionSubscription = this.multimodalLiveService.geminiTranscribeService?.stream$.subscribe(
-    //     (fragment: TranscriptionFragment | null) => {
-    //       if (!fragment) return;
-    //       console.log('Transcription fragment received:', fragment);
-    //       this.messages.push({
-    //         role: fragment.source,
-    //         text: fragment.transcript
-    //       });
-    //     },
-    //   );
-    // }
 
     setTimeout(() => {
       this.renderer.setStyle(this.infoBox.nativeElement, "opacity", "0");
-    }, 10000 );
+    }, 10000);
   }
 
   ngOnDestroy(): void {
@@ -176,7 +166,7 @@ export class AppComponent implements OnInit, OnDestroy {
   connect(): void {
     this.multimodalLiveService.connect({
       affective: false,
-      proactive: false, 
+      proactive: false,
     }).then(() => {
       console.log("Connected successfully");
       this.isConnected = true;
@@ -213,7 +203,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   handleVideoStreamChange(stream: MediaStream | null) {
     // Handle the video stream change here (e.g., update the video element)
-    if(this.myVideoRef){
+    if (this.myVideoRef) {
       this.myVideoRef.nativeElement.srcObject = stream;
       this.renderer.setStyle(this.myVideoRef.nativeElement, "visibility", "visible");
     }

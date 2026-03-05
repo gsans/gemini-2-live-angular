@@ -86,7 +86,7 @@ export class ControlTrayComponent
           this.connectButtonRef.nativeElement.focus();
           this.cdr.detectChanges(); // Trigger change detection after focus
         }
-        if(!connected){
+        if (!connected) {
           if (this.screenCaptureService.isStreaming) {
             this.screenCaptureService.stop();
             this.onVideoStreamChange.emit(null);
@@ -138,21 +138,12 @@ export class ControlTrayComponent
 
   async handleAudioRecording() {
     if (this.isConnected && !this.muted) {
-      // if (this.multimodalLiveService.microphoneTranscribeService) {
-      //   await this.multimodalLiveService.microphoneTranscribeService?.start();
-      // }
-      
       this.audioRecorder
         .on('data', (event) => {
           this.multimodalLiveService.sendRealtimeInput([{
             mimeType: 'audio/pcm;rate=16000',
             data: event.arrayBufferString,
           }]);
-          // if (this.multimodalLiveService.microphoneTranscribeService) {
-          //   let transcribeService = this.multimodalLiveService.microphoneTranscribeService;
-          //   transcribeService?.sendAudioData(event.data);
-          // }
-          
           //console.log(`[Audio]: Stream going out`, base64);
         })
         .on('volume', (volume: number) => {
@@ -161,9 +152,6 @@ export class ControlTrayComponent
         .start();
     } else {
       this.audioRecorder.stop();
-      // if (this.multimodalLiveService.microphoneTranscribeService) {
-      //   this.multimodalLiveService.microphoneTranscribeService?.stop();
-      // }
     }
   }
 
@@ -243,7 +231,7 @@ export class ControlTrayComponent
   toggleNativeAudio(event: any): void {
     if (event.target.id === 'affectiveAudio') {
       this.proactiveAudioRef.nativeElement.checked = false; // Ensure only one is checked
-    } 
+    }
     if (event.target.id === 'proactiveAudio') {
       this.affectiveAudioRef.nativeElement.checked = false; // Ensure only one is checked
     }

@@ -13,6 +13,14 @@ This project demonstrates integration with Google's Gemini AI models through the
 
 ## What's new? 
 
+[5th March 2026]
+- Upgraded `@google/genai` SDK from `1.8.0` to `1.44.0`.
+- Updated model to `gemini-2.5-flash-native-audio-latest` (latest stable native audio model).
+- Enabled **native Gemini transcription** for both user and model audio via `inputAudioTranscription` and `outputAudioTranscription` in the Live API config. No third-party service (Deepgram) required.
+- Transcription output is now **buffered by turn** — fragments accumulate until turn-complete, interruption, or a 2-second inactivity timeout, then emit as a single log entry.
+- Fixed MCP tool response handling: parse `content[0].text` from MCP `callTool` responses, with graceful fallback for non-JSON error strings.
+- Fixed `functionResponses` payload to use an array as required by the updated SDK.
+
 [30th September]
 - New model: `Gemini 2.5 Flash Native Audio Preview` replaces `Gemini 2.0 Flash Live`.
 - Updated to latest model `gemini-2.5-flash-native-audio-preview-09-2025`.
@@ -54,7 +62,8 @@ This project demonstrates integration with Google's Gemini AI models through the
 - Google Search integration for current information
 - Secure Python code execution in sandbox
 - Automated function calling for API integration
-- Live transcription for streamed audio (user and model) via Deepgram API (optional)
+- Live transcription for streamed audio (user and model) via native Gemini transcription (built-in)
+- Legacy Deepgram transcription support (optional, disabled by default)
 
 ## What's Gemini 2.5 Live?
 
@@ -88,7 +97,7 @@ Project Astra is a research initiative aimed at developing a universal AI assist
 - Google AI API key from [Google AI Studio](https://makersuite.google.com/)
 - Deepgram API key from [Deepgram](https://deepgram.com/) (optional)
 
-> Note that currently `Gemini 2.5 Flash Native Audio` only sends transcript information when using Vertex AI. You can use Deepgram to transcribe both the user's audio and the model's audio from a Web Client if needed. To enable it just create an API Key and add it to the development environment.
+> As of the March 2026 update, native Gemini transcription is enabled by default via `inputAudioTranscription` and `outputAudioTranscription` in the Live API config. Deepgram is no longer required. Legacy Deepgram support remains in the codebase but is disabled by default.
 
 ### Installation Steps
 
@@ -188,8 +197,9 @@ Access the application at `http://localhost:4200/`
 ## Project Information
 - Built with Angular CLI version 20.3.3
 - Logging state management including Dev Tools with NgRx version 20.0.0
-- TypeScript GenAI SDK version 1.8.0
+- TypeScript GenAI SDK version 1.44.0
 - Typescript SDK for Model Context Protocol version 1.15.0
+- Native Gemini transcription (no third-party dependency required)
 - Features automatic reload during development
 - Includes production build optimizations
 
