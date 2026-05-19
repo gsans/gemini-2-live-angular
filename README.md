@@ -1,9 +1,9 @@
-# Gemini 2.5 Flash Native Audio (Live API) Demo
+# Gemini 3.1 Flash Live Preview Demo
 
 https://github.com/user-attachments/assets/c4a0ebaa-fc1a-486f-89da-26b5c26c6dd6
 
 ## Overview
-This project showcases Gemini 2.5 real-time multimodal AI capabilities in a web application using Angular. Currently the Live API is set to use `Gemini 2.5 Flash Native Audio Preview`.
+This project showcases Gemini 3.1 real-time multimodal AI capabilities in a web application using Angular. Currently the Live API is set to use `Gemini 3.1 Flash Live Preview`.
 
 ![diagram](https://i.imgur.com/74hv0ay.png)
 
@@ -12,6 +12,13 @@ This project demonstrates integration with Google's Gemini AI models through the
 > This project started as a migration to Angular of the [Live API - Web console](https://github.com/google-gemini/multimodal-live-api-web-console) as is only available in React at the moment.
 
 ## What's new? 
+
+[19th May 2026]
+- New model: `gemini-3.1-flash-live-preview` replaces `gemini-2.5-flash-native-audio-latest`.
+- Features Real-Time Multimodal Interaction with full barge-in and conversational rhythm adaptation.
+- Explicit Voice Activity Detection (VAD) toggle added to the UI (`explicitVadSignal`).
+- Deep conversational session context natively supported.
+- Check `gemini31-flash-live.md` for a full breakdown of the new features configuration and status!
 
 [5th March 2026]
 - Upgraded `@google/genai` SDK from `1.8.0` to `1.44.0`.
@@ -64,6 +71,11 @@ This project demonstrates integration with Google's Gemini AI models through the
 - Automated function calling for API integration
 - Live transcription for streamed audio (user and model) via native Gemini transcription (built-in)
 - Legacy Deepgram transcription support (optional, disabled by default)
+
+### Potential Future Extensions (Gemini 3.1)
+- **Stream Translation**: Configure stream-level audio translations to target specific languages on the fly using `streamTranslationConfig`.
+- **Session Resumption**: Persist and seamlessly resume dropped or paused multimodal sessions natively via `sessionResumption`.
+- **Avatar Configuration**: Integrate with real-time visual avatars driven directly by the model's responses and emotions via `avatarConfig`.
 
 ## What's Gemini 2.5 Live?
 

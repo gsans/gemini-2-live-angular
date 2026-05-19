@@ -167,17 +167,13 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
         ],
       }
     }
-    // if (!user.affectiveAudio && !user.proactiveAudio) {
-    //   model = "gemini-live-2.5-flash-preview";
-    // } else {
-    //   model = "gemini-2.5-flash-preview-native-audio-dialog";
-    // }
-    model = "gemini-2.5-flash-native-audio-latest";
+    model = "gemini-3.1-flash-live-preview";
     customConfig = {
       model,
       config: {
         ...this.config,
         ...userConfig,
+        ...(user.explicitVad ? { explicitVadSignal: true } : {}),
       }
     };
     return customConfig;
