@@ -77,29 +77,29 @@ This project demonstrates integration with Google's Gemini AI models through the
 - **Session Resumption**: Persist and seamlessly resume dropped or paused multimodal sessions natively via `sessionResumption`.
 - **Avatar Configuration**: Integrate with real-time visual avatars driven directly by the model's responses and emotions via `avatarConfig`.
 
-## What's Gemini 3.1 Live?
+## Gemini Intelligence and the Future Roadmap
 
-Gemini Live API enables a new generation of dynamic, multimodal AI real-time experiences.
+**Gemini Intelligence (Expected Summer 2026)** is Google's new initiative that helps you automate tedious tasks so you can focus on what matters. 
 
-### The Gemini App (available for Android and iOS)
-Gemini Live powers innovative applications across devices and platforms:
+- **Automate multi-step tasks across your apps**: App automation is even more powerful when you add screen or image context. Instead of manually switching between apps and copying data.
+- **Gemini can turn visual context into instant action**: Get instant summaries, generate replies, or find information without ever leaving your app.
+
+> Rolling out for Samsung Galaxy and Google Pixel phones, and will become available across Android devices, including watches, cars, glasses and laptops.
+
+[![Gemini Intelligence](https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Bento_Blog_header-_5.6.26_.width-2200.format-webp.webp)](https://www.youtube.com/watch?v=4f7VamjPHaM)
+
+### How Gemini 3.1 Live Fits In
+
+The **Gemini 3.1 Live API** serves as the underlying real-time, multimodal engine that makes these dynamic experiences possible. By providing continuous bidirectional streaming, robust voice activity detection (VAD), and deep contextual awareness, Gemini 3.1 Live enables developers to build the same seamless, intelligent interactions that power the Gemini ecosystem.
+
+**The Gemini App (available for Android and iOS)** leverages these capabilities to power innovative applications across devices and platforms:
 
 - **Hands-free AI Assistance**: Users interact naturally through voice while cooking, driving, or multitasking
 - **Real-time Visual Understanding**: Get instant AI responses as you show objects, documents, or scenes through your camera
 - **Smart Home Automation**: Control your environment with natural voice commands - from adjusting lights to managing thermostats
 - **Seamless Shopping**: Browse products, compare options, and complete purchases through conversation
 - **Live Problem Solving**: Share your screen to get real-time guidance, troubleshooting, or explanations
-- **Integration with Google services**: leverage existing Google services like Search or Maps to enhance its capabilities
-
-[![Gemini App on Pixel 9](https://img.youtube.com/vi/mNTGbi5ReMc/0.jpg)](https://www.youtube.com/watch?v=mNTGbi5ReMc)
-
-### Project Astra
-
-Project Astra is a research initiative aimed at developing a universal AI assistant with advanced capabilities. It's designed to process multimodal information, including text, speech, images, and video, allowing for a more comprehensive understanding of user needs and context.
-
-![Project Astra](https://i.imgur.com/VEPikJN.png)
-
-[More details](https://deepmind.google/technologies/project-astra/)
+- **Integration with Google services**: Leverage existing Google services like Search or Maps to enhance capabilities
 
 ## Setup Instructions
 
