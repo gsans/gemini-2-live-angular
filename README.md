@@ -59,10 +59,10 @@ This project demonstrates integration with Google's Gemini AI models through the
 
 ## Core Features
 - Starter kit based on [Live API - Web console](https://github.com/google-gemini/multimodal-live-api-web-console)
-- TypeScript GenAI SDK for Gemini 2.5 API
+- TypeScript GenAI SDK for Gemini 3.1 API
 - MCP support: Typescript MCP SDK
-- Real-time streaming voice from and to Gemini 2.5 Live API
-- Real-time streaming video from webcam or screen to Gemini 2.5 Live API
+- Real-time streaming voice from and to Gemini 3.1 Live API
+- Real-time streaming video from webcam or screen to Gemini 3.1 Live API
 - Support for both native and cascade audio models
 - Natural language text generation
 - Interactive chat functionality
@@ -77,7 +77,7 @@ This project demonstrates integration with Google's Gemini AI models through the
 - **Session Resumption**: Persist and seamlessly resume dropped or paused multimodal sessions natively via `sessionResumption`.
 - **Avatar Configuration**: Integrate with real-time visual avatars driven directly by the model's responses and emotions via `avatarConfig`.
 
-## What's Gemini 2.5 Live?
+## What's Gemini 3.1 Live?
 
 Gemini Live API enables a new generation of dynamic, multimodal AI real-time experiences.
 
@@ -134,9 +134,9 @@ Project Astra is a research initiative aimed at developing a universal AI assist
 
 ### Getting Started
 1. Launch the application and click the `Connect` button under `Connection Status`
-2. The demo uses Gemini 2.5 Live API which requires a WebSocket connection
+2. The demo uses Gemini 3.1 Live API which requires a WebSocket connection
 3. Monitor the browser's Developer Tools Console for connection issues
-4. Before diving into development, explore Gemini 2.5's Live capabilities (voice interactions, webcam, and screen sharing) using [Google AI Studio Live](https://aistudio.google.com/live). This interactive playground will help you understand the available features and integration options before implementing them in your project.
+4. Before diving into development, explore Gemini 3.1's Live capabilities (voice interactions, webcam, and screen sharing) using [Google AI Studio Live](https://aistudio.google.com/live). This interactive playground will help you understand the available features and integration options before implementing them in your project.
 
 ### Feature Testing Examples
 Test the various capabilities using these example prompts:
