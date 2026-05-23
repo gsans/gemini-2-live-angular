@@ -260,7 +260,7 @@ export class ControlTrayComponent
       //console.log(`[sendVideoFrame]: Stream going out`, data);
     }
     if (this.isConnected) {
-      setTimeout(this.sendVideoFrame, 1000 / 0.5);
+      setTimeout(this.sendVideoFrame, 1000 / 0.5); // 2FPS
     }
   };
 }
