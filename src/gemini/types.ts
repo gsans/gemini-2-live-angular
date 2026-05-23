@@ -71,7 +71,10 @@ export type ClientContentMessage = {
 
 export type RealtimeInputMessage = {
   realtimeInput: {
-    mediaChunks: GenerativeContentBlob[];
+    mediaChunks?: GenerativeContentBlob[];
+    audio?: GenerativeContentBlob;
+    video?: GenerativeContentBlob;
+    text?: string;
   };
 };
 

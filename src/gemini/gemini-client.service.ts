@@ -167,13 +167,20 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
         ],
       }
     }
-    model = "gemini-3.1-flash-live-preview";
+    if (user.affectiveAudio || user.proactiveAudio) {
+      // Both Affective Dialog and Proactive Audio features are only supported in the
+      // gemini-2.5-flash-native-audio-latest model, and are unsupported in gemini-3.1-flash-live-preview.
+      model = "gemini-2.5-flash-native-audio-latest";
+    } else {
+      model = "gemini-3.1-flash-live-preview";
+    }
     customConfig = {
       model,
       config: {
         ...this.config,
         ...userConfig,
-        ...(user.explicitVad ? { explicitVadSignal: true } : {}),
+        // Note: explicitVadSignal is only supported in Gemini Enterprise Agent Platform mode (Vertex AI)
+        // and is unsupported in Gemini Developer API mode (v1alpha with API Key), so we omit it here.
       }
     };
     return customConfig;
@@ -434,14 +441,13 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
       const chunk = chunks[i];
       if (chunk?.mimeType?.includes("audio")) {
         hasAudio = true;
-      }
-      if (chunk?.mimeType?.includes("image")) {
+        this._session?.sendRealtimeInput({ audio: chunk });
+      } else if (chunk?.mimeType?.includes("image") || chunk?.mimeType?.includes("video")) {
         hasVideo = true;
+        this._session?.sendRealtimeInput({ video: chunk });
+      } else {
+        this._session?.sendRealtimeInput({ media: chunk });
       }
-      if (hasAudio && hasVideo) {
-        break;
-      }
-      this._session?.sendRealtimeInput({ media: chunk });
     }
     const message = hasAudio && hasVideo ? "audio + video" : (hasAudio ? "audio" : hasVideo ? "video" : "unknown");
     this.log("client.realtimeInput", message);

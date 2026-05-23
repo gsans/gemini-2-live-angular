@@ -218,7 +218,7 @@ export class ControlTrayComponent
     if (this.isConnected) {
       this.affectiveAudioRef.nativeElement.disabled = false;
       this.proactiveAudioRef.nativeElement.disabled = false;
-      this.explicitVadRef.nativeElement.disabled = false;
+      this.explicitVadRef.nativeElement.disabled = true;
       this.multimodalLiveService.disconnect();
     } else {
       this.affectiveAudioRef.nativeElement.disabled = true;

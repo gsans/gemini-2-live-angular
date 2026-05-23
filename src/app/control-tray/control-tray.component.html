@@ -53,9 +53,9 @@
         <label for="proactiveAudio">Proactive</label>
         <input id="proactiveAudio" #proactiveAudio type="checkbox" role="switch" (change)="toggleNativeAudio($event)" />
       </div>
-      <div class="native-audio-container native-audio-button">
-        <label for="explicitVad">Explicit VAD</label>
-        <input id="explicitVad" #explicitVad type="checkbox" role="switch" />
+      <div class="native-audio-container native-audio-button" title="Only supported in Gemini Enterprise Agent Platform mode (Vertex AI)">
+        <label for="explicitVad" style="opacity: 0.5;">Explicit VAD (N/A)</label>
+        <input id="explicitVad" #explicitVad type="checkbox" role="switch" disabled />
       </div>
     </div>
 </section>
