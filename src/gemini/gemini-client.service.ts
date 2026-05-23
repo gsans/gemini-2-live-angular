@@ -221,7 +221,7 @@ export class MultimodalLiveService extends EventEmitter<MultimodalLiveClientEven
       const audioCtx = await audioContext({ id: 'audio-out' });
       this.audioStreamer = new AudioStreamer(audioCtx);
       await this.audioStreamer.addWorklet<any>(
-        'vumeter-out',
+        'vu-meter',
         VolMeterWorket,
         (ev: any) => {
           this.volumeSubject.next(ev.data.volume);

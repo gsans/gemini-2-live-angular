@@ -64,7 +64,8 @@ import {
       // create new record to fill in as becomes available
       workletsRecord[workletName] = { handlers: [handler] };
   
-      const src = createWorketFromSrc(workletName, workletSrc);
+      const isUrl = workletSrc.startsWith("blob:") || workletSrc.startsWith("http:") || workletSrc.includes("/");
+      const src = isUrl ? workletSrc : createWorketFromSrc(workletName, workletSrc);
       await this.context.audioWorklet.addModule(src);
       const worklet = new AudioWorkletNode(this.context, workletName);
   
