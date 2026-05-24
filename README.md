@@ -21,7 +21,7 @@ This project demonstrates integration with Google's Gemini AI models through the
 - Check `gemini31-flash-live.md` for a full breakdown of the new features configuration and status!
 
 [5th March 2026]
-- Upgraded `@google/genai` SDK from `1.8.0` to `1.44.0`.
+- Upgraded `@google/genai` SDK from `1.8.0` to `2.4.0`.
 - Updated model to `gemini-2.5-flash-native-audio-latest` (latest stable native audio model).
 - Enabled **native Gemini transcription** for both user and model audio via `inputAudioTranscription` and `outputAudioTranscription` in the Live API config. No third-party service (Deepgram) required.
 - Transcription output is now **buffered by turn** — fragments accumulate until turn-complete, interruption, or a 2-second inactivity timeout, then emit as a single log entry.
@@ -153,19 +153,23 @@ Test the various capabilities using these example prompts:
 
 ### Configuration Options
 
-The main configuration is handled in `src/app.component`. You can toggle between audio and text modalities:
+The main configuration is handled in `src/gemini/gemini-client.service.ts` within the `MultimodalLiveService` class. You can customize the `LiveConnectConfig` settings, including response modalities (e.g. text vs. audio), proactivity features, and tools:
 
 ```typescript
-let config: LiveConnectConfig = {
-   // For text responses in chat window
-   responseModalities: [Modality.TEXT], // note "audio" doesn't send a text response over
-   
-   // For audio responses (uncomment to enable)
-   // responseModalities: [Modality.AUDIO],
-   // speechConfig: {
-   //   voiceConfig: { prebuiltVoiceConfig: { voiceName: "Aoede" } },
-   // },
-}
+public config: LiveConnectConfig = {
+  // responseModalities: [Modality.TEXT],
+  responseModalities: [Modality.AUDIO], // note "audio" doesn't send a text response over
+
+  //maxOutputTokens: 100,
+  mediaResolution: MediaResolution.MEDIA_RESOLUTION_MEDIUM, // API only supports "low" and "medium" for now
+  contextWindowCompression: {
+    triggerTokens: '25600',
+    slidingWindow: { targetTokens: '12800' },
+  },
+  // Native Gemini transcription (no Deepgram needed)
+  inputAudioTranscription: {},
+  outputAudioTranscription: {},
+};
 ```
 
 ### Usage Limits
@@ -207,9 +211,9 @@ Access the application at `http://localhost:4200/`
      Note: Select and install your preferred E2E testing framework
 
 ## Project Information
-- Built with Angular CLI version 20.3.3
-- Logging state management including Dev Tools with NgRx version 20.0.0
-- TypeScript GenAI SDK version 1.44.0
+- Built with Angular CLI version 20.3.26
+- Logging state management including Dev Tools with NgRx version 20.1.0
+- TypeScript GenAI SDK version 2.4.0
 - Typescript SDK for Model Context Protocol version 1.15.0
 - Native Gemini transcription (no third-party dependency required)
 - Features automatic reload during development
